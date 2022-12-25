@@ -1,0 +1,16 @@
+{
+  "CourseList": [
+    {
+      "courseCode": "BCS2143",
+      "courseName": "OBJECT ORIENTED PROGRAMMIN",
+      "courseCredit": "3",
+      "isLab": "1"
+    },
+    {
+      "courseCode": "UHE3092",
+      "courseName": "ENGLISH MECHANICS",
+      "courseCredit": "1",
+      "isLab": "0"
+    }
+  ]
+}
