@@ -1,6 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:self_task_student/Data/Database/SQLite/Model/AssignmentModel.dart';
-import 'package:self_task_student/Data/Database/SQLite/Model/UserCourseModel.dart';
 
 import '../Repository/UserCourseRepository.dart';
 
