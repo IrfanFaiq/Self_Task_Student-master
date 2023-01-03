@@ -1,8 +1,7 @@
 import 'dart:core';
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:self_task_student/Data/Database/SQLite/Model/AssignmentModel.dart';
@@ -10,7 +9,8 @@ import 'package:self_task_student/Data/Database/SQLite/Model/ReminderModel.dart'
 import 'package:sqflite/sqflite.dart';
 
 import '../Model/UserCourseModel.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 class CourseDatabase {
   CourseDatabase._privateContructor();
 
