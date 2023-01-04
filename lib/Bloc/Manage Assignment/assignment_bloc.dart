@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:self_task_student/Data/Database/SQLite/Model/AssignmentModel.dart';
 import 'package:self_task_student/Data/Database/SQLite/Provider/AssignmentProvider.dart';
 
