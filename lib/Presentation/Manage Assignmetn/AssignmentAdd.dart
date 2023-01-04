@@ -36,7 +36,7 @@ class _AssignmentAdd extends State<AssignmentAdd>{
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Add Course Work"),
+          title: const Text("Add Task"),
           centerTitle: true,
           flexibleSpace: Container(
             decoration: const BoxDecoration(
@@ -59,11 +59,12 @@ class _AssignmentAdd extends State<AssignmentAdd>{
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        assignmentNameWidget(),
-                        const SizedBox(height: 15),
-                        assignmentDescWidget(),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 20),
                         typeWidget(),
+                        const SizedBox(height: 30),
+                        Text("Task Details", style: TextStyle(color: Color.fromRGBO(48, 47, 48, 1.0), fontWeight: FontWeight.w700, fontSize: 16),),
+                        assignmentNameWidget(),
+                        assignmentDescWidget(),
                         const SizedBox(height: 15),
                         dueDateWidget(),
                         const SizedBox(height: 15),
@@ -108,19 +109,6 @@ class _AssignmentAdd extends State<AssignmentAdd>{
                                   );
 
                                   Navigator.of(context).pop();
-
-                                  // Navigator.pushAndRemoveUntil(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         settings: RouteSettings(
-                                  //           arguments: {
-                                  //             "id": _courseId,
-                                  //           }
-                                  //         ),
-                                  //         builder: (BuildContext context) =>
-                                  //         const AssignmentList()),
-                                  //         (Route<dynamic> route) => false);
-
                                 }
                               },
                               style: ElevatedButton.styleFrom(
@@ -179,7 +167,7 @@ class _AssignmentAdd extends State<AssignmentAdd>{
           return null;
         },
       decoration: const InputDecoration(
-        label: Text('Course Assessment Type'),
+        label: Text('Task Type'),
       ),
       value: _typeFirst,
       elevation: 16,
