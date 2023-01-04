@@ -29,7 +29,7 @@ class _AssignmentList extends State<AssignmentList>{
     return SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            title: const Text("Work List "),
+            title: const Text("Task List "),
             centerTitle: true,
             flexibleSpace: Container(
               decoration: const BoxDecoration(
@@ -85,7 +85,7 @@ class _AssignmentList extends State<AssignmentList>{
                           assignmentBloc.add(GetUserAssignment(user.uid, courseId));
                         }));
                       },
-                      child: const Text('Add work'),
+                      child: const Text('Add Task'),
                     ),
                   ),
                 ),
@@ -101,7 +101,6 @@ class _AssignmentList extends State<AssignmentList>{
                 return assignmentBloc;},
               child: BlocBuilder<AssignmentBloc, AssignmentState>(builder:(context, state){
                 if (state is AssignmentInitial) {
-
                   return const Center(child: CircularProgressIndicator(color: Colors.red,));
 
                 } else if (state is AssignmentLoading) {
@@ -109,10 +108,11 @@ class _AssignmentList extends State<AssignmentList>{
 
                 } else if (state is GetAssignmentState) {
                   if(state.listAssignment.length == 0){
-                    return Center(child: Text("Please add a work"));
+                    return Center(child: Text("Please add a task"));
                   }else{
                     return _getAssignmentList(context, state.listAssignment, assignmentBloc);
                   }
+
                 } else {
                   return const Center(child: Text("No data"));
                 }
@@ -127,7 +127,6 @@ class _AssignmentList extends State<AssignmentList>{
     return ListView.builder(
       itemCount: state == null ? 0 : state.length,
       itemBuilder: (context, index){
-        String desc = state[index].assignmentName;
         return GestureDetector(
           onTap: (){},
           child: Card(
@@ -213,38 +212,36 @@ class _AssignmentList extends State<AssignmentList>{
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Work Description: ${state[index].assignmentDesc}",
+                                Text("Task Description: ${state[index].assignmentDesc}",
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.normal,
                                       color: Colors.black87),
                                 ),
 
-                                Text("Work Type: ${state[index].type}",
+                                Text("Task Type: ${state[index].type}",
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.normal,
                                       color: Colors.black87),
                                 ),
 
-                                Text("Work Date: ${state[index].dueDate}",
+                                Text("Task Date: ${state[index].dueDate}",
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.normal,
                                       color: Colors.black87),
                                 ),
 
-                                Text("Work Time: ${state[index].dueTime}",
+                                Text("Task Time: ${state[index].dueTime}",
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.normal,
                                       color: Colors.black87),
                                 ),
-
                               ],
                             ),
                           ),
-
                         ],
                       ),
                     ),
@@ -255,7 +252,6 @@ class _AssignmentList extends State<AssignmentList>{
           ),
         );
       },
-
     );
   }
 }
