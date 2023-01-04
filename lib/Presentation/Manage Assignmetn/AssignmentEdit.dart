@@ -4,9 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:self_task_student/Bloc/Manage%20Assignment/assignment_bloc.dart';
 import 'package:self_task_student/Data/Database/SQLite/Model/AssignmentModel.dart';
-import 'package:self_task_student/Presentation/Manage%20Subject/AddSubject.dart';
-
-import 'AssignmentList.dart';
 
 class AssignmentEdit extends StatefulWidget{
   const AssignmentEdit({Key? key}) : super(key: key);
