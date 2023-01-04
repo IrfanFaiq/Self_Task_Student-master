@@ -26,7 +26,6 @@ class _AssignmentList extends State<AssignmentList>{
   Widget build(BuildContext context) {
     final course = ModalRoute.of(context)?.settings.arguments as Map;
     int courseId = int.parse(course['id'].toString());
-    int remainingDate;
     return SafeArea(
         child: Scaffold(
           appBar: AppBar(
@@ -139,7 +138,7 @@ class _AssignmentList extends State<AssignmentList>{
             margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 6),
             child: ListTile(
               leading: Image(
-                image: AssetImage('assets/assignment.png'),
+                image: AssetImage(chooseImage(state[index].type.toString())),
                 width: 80,
                 height: 80,),
               title: Text(
@@ -168,6 +167,21 @@ class _AssignmentList extends State<AssignmentList>{
         );
       },
     );
+  }
+
+  String chooseImage(taskType){
+    if(taskType == 'Assignment'){
+      return 'assets/assignment.png';
+    }
+      else if(taskType == 'Quiz'){
+      return 'assets/quiz.png';
+      }
+      else if(taskType == 'Project'){
+        return 'assets/project.png';
+      }
+    else{
+      return 'assets/exam.png';
+    }
   }
 
   int calculateRemainingDate(state, index){
