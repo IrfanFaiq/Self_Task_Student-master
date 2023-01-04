@@ -299,7 +299,7 @@ class _AssignmentList extends State<AssignmentList>{
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Due in: ${calculateRemainingDate(state, index)} days",
+                                Text("Due in ${calculateRemainingDate(state, index)} days",
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.normal,
