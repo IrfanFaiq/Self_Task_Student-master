@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:self_task_student/Bloc/Manage%20Assignment/assignment_bloc.dart';
 import 'package:self_task_student/Data/Database/SQLite/Model/AssignmentModel.dart';
+import 'AssignmentList.dart';
 
 class AssignmentAdd extends StatefulWidget{
   const AssignmentAdd({Key? key}) : super(key: key);
@@ -117,6 +118,28 @@ class _AssignmentAdd extends State<AssignmentAdd>{
                                   shape:
                                   RoundedRectangleBorder(borderRadius: BorderRadius.circular(25))),
                               child: const Text('Confirm'),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        Material(
+                          elevation: 8,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(25)),
+                              color: Colors.white,
+                            ),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  fixedSize: const Size(300, 60),
+                                  shape:
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(25))),
+                              child: const Text('Cancel'),
                             ),
                           ),
                         ),
@@ -240,7 +263,7 @@ class _AssignmentAdd extends State<AssignmentAdd>{
         },
         decoration: InputDecoration(// add padding to adjust text
             contentPadding: const EdgeInsets.only(top: 15),
-            label: const Text("Class Time"),
+            label: const Text("Due Time"),
             prefixIcon: const Icon(Icons.access_time, size: 25),
             suffixIcon: IconButton(
               onPressed: _dueTime.clear,
