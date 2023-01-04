@@ -299,7 +299,7 @@ class _AssignmentList extends State<AssignmentList>{
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Due in: ${state[index].dueDate} days",
+                                Text("Due in: ${calculateRemainingDate(state, index)} days",
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.normal,
@@ -319,6 +319,15 @@ class _AssignmentList extends State<AssignmentList>{
         );
       },
     );
+  }
+
+  int calculateRemainingDate(state, index){
+    var parsedDate= DateTime.parse(state[index].dueDate);
+    DateTime currentDate = DateTime.now();
+
+    final Duration duration  = currentDate.difference(parsedDate);
+    int remainingDate = duration.inDays;
+    return remainingDate;
   }
 
   Widget _editTask(state, index){
