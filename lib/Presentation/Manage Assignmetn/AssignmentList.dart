@@ -26,6 +26,7 @@ class _AssignmentList extends State<AssignmentList>{
   Widget build(BuildContext context) {
     final course = ModalRoute.of(context)?.settings.arguments as Map;
     int courseId = int.parse(course['id'].toString());
+    int remainingDate;
     return SafeArea(
         child: Scaffold(
           appBar: AppBar(
@@ -127,6 +128,7 @@ class _AssignmentList extends State<AssignmentList>{
     );
   }
 
+  /*
   Widget _getAssignmentList(BuildContext context, state, assignmentBloc){
     return ListView.builder(
       itemCount: state == null ? 0 : state.length,
@@ -177,34 +179,10 @@ class _AssignmentList extends State<AssignmentList>{
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.edit),
-                                    onPressed: () {
-
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => const AssignmentEdit(),
-                                              settings: RouteSettings(
-                                                arguments: {
-                                                  "id": state[index].id.toString(),
-                                                  "courseId": state[index].courseId.toString(),
-                                                },
-                                              ))).then((_)=>setState((){
-                                        assignmentBloc.add(GetUserAssignment(user.uid, state[index].courseId));
-                                      }));
-
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.delete, color: Colors.red,),
-                                    onPressed: () {
-                                      assignmentBloc.add(DeleteAssignmentData(state[index].id));
-                                      setState((){
-                                        assignmentBloc.add(GetUserAssignment(user.uid, state[index].courseId));
-                                      });
-                                    },
-                                  ),
+                                  //Edit Task Button
+                                  _editTask(state,index),
+                                  //Delete Task Button
+                                  _deleteTask(state, index),
                                 ],
                               ),
                             ],
@@ -255,6 +233,123 @@ class _AssignmentList extends State<AssignmentList>{
             ),
           ),
         );
+      },
+    );
+  }
+
+
+   */
+
+
+  Widget _getAssignmentList(BuildContext context, state, assignmentBloc){
+    return ListView.builder(
+      itemCount: state == null ? 0 : state.length,
+      itemBuilder: (context, index){
+        return GestureDetector(
+          onTap: (){},
+          child: Card(
+            elevation: 2,
+            margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 6),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding:
+                                    const EdgeInsets.only(left: 8, right: 8),
+                                    child: Text(
+                                      state[index].assignmentName.toString(),
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  //Edit Task Button
+                                  _editTask(state,index),
+                                  //Delete Task Button
+                                  _deleteTask(state, index),
+                                ],
+                              ),
+                            ],
+                          ),
+
+                          Padding(
+                            padding: EdgeInsets.only(left: 8, right: 8),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Due in: ${state[index].dueDate} days",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black87),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _editTask(state, index){
+    return IconButton(
+      icon: const Icon(Icons.edit),
+      onPressed: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const AssignmentEdit(),
+                settings: RouteSettings(
+                  arguments: {
+                    "id": state[index].id.toString(),
+                    "courseId": state[index].courseId.toString(),
+                  },
+                ))).then((_)=>setState((){
+          assignmentBloc.add(GetUserAssignment(user.uid, state[index].courseId));
+        }));
+
+      },
+    );
+  }
+
+  Widget _deleteTask(state, index){
+    return IconButton(
+      icon: const Icon(Icons.delete, color: Colors.red,),
+      onPressed: () {
+        assignmentBloc.add(DeleteAssignmentData(state[index].id));
+        setState((){
+          assignmentBloc.add(GetUserAssignment(user.uid, state[index].courseId));
+        });
       },
     );
   }
