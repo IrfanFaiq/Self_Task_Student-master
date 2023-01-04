@@ -38,7 +38,7 @@ class _AssignmentEdit extends State<AssignmentEdit>{
     return SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            title: const Text("Edit Course Work"),
+            title: const Text("Edit Task"),
             centerTitle: true,
             flexibleSpace: Container(
               decoration: const BoxDecoration(
@@ -79,11 +79,12 @@ class _AssignmentEdit extends State<AssignmentEdit>{
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            assignmentNameWidget(),
-                            const SizedBox(height: 15),
-                            assignmentDescWidget(),
-                            const SizedBox(height: 15),
+                            const SizedBox(height: 20),
                             typeWidget(),
+                            const SizedBox(height: 30),
+                            Text("Task Details", style: TextStyle(color: Color.fromRGBO(48, 47, 48, 1.0), fontWeight: FontWeight.w700, fontSize: 16),),
+                            assignmentNameWidget(),
+                            assignmentDescWidget(),
                             const SizedBox(height: 15),
                             dueDateWidget(),
                             const SizedBox(height: 15),
@@ -140,7 +141,28 @@ class _AssignmentEdit extends State<AssignmentEdit>{
                                 ),
                               ),
                             ),
-
+                            const SizedBox(height: 15),
+                            Material(
+                              elevation: 8,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(25)),
+                                  color: Colors.white,
+                                ),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.transparent,
+                                      fixedSize: const Size(300, 60),
+                                      shape:
+                                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(25))),
+                                  child: const Text('Cancel'),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
