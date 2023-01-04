@@ -1,14 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:self_task_student/Bloc/Authenticate/auth_bloc.dart';
 import 'package:self_task_student/Bloc/Manage%20Course/course_bloc.dart';
 import 'package:self_task_student/Data/Database/SQLite/Model/CourseListModel.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:async';
 import 'package:self_task_student/Data/Database/SQLite/Model/UserCourseModel.dart';
-import 'package:self_task_student/View/Settings/Manage%20Subject/SubjectList.dart';
 
 import '../../View/Settings/Manage Subject/CheckBoxState.dart';
 //TODO: make the get from json much faster by declaring the list outside and call the list in if esle
@@ -22,13 +16,11 @@ class AddSubject extends StatefulWidget {
 }
 
 class _AddSubject extends State<AddSubject> {
-  String? _mySelection;
   List data = [];
+
   @override
   void initState() {
-    getCore();
-    getUniversity();
-    getMath();
+
     super.initState();
   }
 
@@ -38,8 +30,6 @@ class _AddSubject extends State<AddSubject> {
     });
   }
 
-
-
   final lectureDays = [
     CheckBoxState(title: 'Monday'),
     CheckBoxState(title: 'Tuesday'),
@@ -48,13 +38,7 @@ class _AddSubject extends State<AddSubject> {
     CheckBoxState(title: 'Friday'),
   ];
 
-  // final labDays = [
-  //   CheckBoxState(title: 'Monday'),
-  //   CheckBoxState(title: 'Tuesday'),
-  //   CheckBoxState(title: 'Wednesday'),
-  //   CheckBoxState(title: 'Thursday'),
-  //   CheckBoxState(title: 'Friday'),
-  // ];
+
   List<String> labDays = [
     "Monday",
     "Tuesday",
@@ -76,20 +60,20 @@ class _AddSubject extends State<AddSubject> {
   final CourseBloc courseBloc = CourseBloc();
   final user = FirebaseAuth.instance.currentUser!;
   final _formKey = GlobalKey<FormState>();
-  int _isLab = 0;
-  int _is2ndClass = 0;
+  int _isLab = 1;
+  int _is2ndClass = 1;
   int? labDayEnabled;
-  bool isThereLabDayTime = false;
+  bool isThereLabDayTime = true;
   String _courseDay = 'Monday';
   String? _labDay;
-  final TextEditingController _courseName = TextEditingController();
   final TextEditingController _courseCode = TextEditingController();
+  final TextEditingController _courseName = TextEditingController();
+  final TextEditingController _creditHour = TextEditingController();
   final TextEditingController _courseSection = TextEditingController();
   final TextEditingController _labSection = TextEditingController();
   final TextEditingController _classTime = TextEditingController();
   final TextEditingController? _labTime = TextEditingController();
   final TextEditingController? _courseDetail = TextEditingController();
-  int _creditHour = 0;
 
 
   @override
@@ -119,15 +103,15 @@ class _AddSubject extends State<AddSubject> {
                              crossAxisAlignment: CrossAxisAlignment.stretch,
                              mainAxisAlignment: MainAxisAlignment.center,
                              children: [
-                               // _cName(),
-                               // const SizedBox(height: 15),
-                               // _cCode(),
                                _cCatagory(),
                                const SizedBox(height: 15),
-                               _dropDown(context),
+                               _cCode(),
                                const SizedBox(height: 15),
-                               // _cNme(),
-                               _cSection(),
+                               _cName(),
+                               const SizedBox(height: 15),
+                               _cCreditHour(),
+                               const SizedBox(height: 15),
+                               _cLectureSection(),
                                const SizedBox(height: 15),
                                _lSection(),
                                const SizedBox(height: 15),
@@ -164,7 +148,7 @@ class _AddSubject extends State<AddSubject> {
                                              userId: user.uid,
                                              courseCode: _courseCode.text,
                                              courseName: _courseName.text,
-                                             creditHour: _creditHour.toString(),
+                                             creditHour: _creditHour.text.toString(),
                                              courseCatagory: _courseCatagory!,
                                              section: _courseSection.text,
                                              day: _courseDay,
@@ -181,7 +165,7 @@ class _AddSubject extends State<AddSubject> {
                                              userId: user.uid,
                                              courseCode: _courseCode.text,
                                              courseName: _courseName.text,
-                                             creditHour: _creditHour.toString(),
+                                             creditHour: _creditHour.text.toString(),
                                              courseCatagory: _courseCatagory!,
                                              section: _courseSection.text,
                                              day: _courseDay,
@@ -193,8 +177,6 @@ class _AddSubject extends State<AddSubject> {
                                            );
                                            courseBloc.add(CreateUserCourseData(userCourseModel));
                                          }
-                                         // UserCourseModel userCourseModel = UserCourseModel(courseCode: _courseCode.text, section: _courseSection.text, day: _courseDay, time: 'one', labSection: _labSection?.text, labDay: _labDay, labTime: null, userId: user.uid, courseName: '', creditHour: null);
-
 
                                          ScaffoldMessenger.of(context).showSnackBar(
                                              const SnackBar(content: Text('Data Added Successfully'),
@@ -213,7 +195,6 @@ class _AddSubject extends State<AddSubject> {
                                    ),
                                  ) ,
                                )
-
                              ],
                            ),
                          )
@@ -222,120 +203,7 @@ class _AddSubject extends State<AddSubject> {
                  )
 
               ),
-
-            // body: Padding(
-            //     padding: EdgeInsets.symmetric(horizontal: 40),
-            //     child: ListView(
-            //       children: [
-            //         Column(
-            //           mainAxisAlignment: MainAxisAlignment.center,
-            //           children: [
-            //             Row(
-            //               children: [Text('Course Name')],
-            //             ),
-            //             SizedBox(height: 10),
-            //             _cName(),
-            //             SizedBox(height: 10),
-            //             Row(
-            //               children: [Text('Course Code')],
-            //             ),
-            //             _cCode(),
-            //             SizedBox(height: 10),
-            //             Row(
-            //               children: [Text('Course Section')],
-            //             ),
-            //             _cSection(),
-            //             SizedBox(height: 10),
-            //             Row(
-            //               children: [Text('Lab Section')],
-            //             ),
-            //             _labSection(),
-            //             SizedBox(height: 10),
-            //             Row(
-            //               children: [Text('Lecture')],
-            //             ),
-            //             ...lectureDays.map(_checkBoxList).toList(),
-            //             SizedBox(height: 10),
-            //             Row(
-            //               children: [Text('Lab')],
-            //             ),
-            //             ...labDays.map(_checkBoxList).toList(),
-            //             SizedBox(height: 10),
-            //             _ConfirmButton(context),
-            //           ],
-            //         )
-            //       ],
-            //     ))
         );
-  }
-
-
-  Widget _cName() {
-    return TextFormField(
-      controller: _courseName,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter the course name';
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        label: Text('Course Name'),
-      ),
-    );
-  }
-
-  Future<String> getSWData() async {
-    var res = await http
-        .get(Uri.parse("https://json-selftask.herokuapp.com/course"), headers: {"Accept": "application/json"});
-    var resBody = json.decode(res.body);
-
-    setState(() {
-      data = resBody;
-    });
-
-    print(resBody);
-
-    return "Sucess";
-  }
-  Future<String> getCore() async {
-    var res = await http
-        .get(Uri.parse("https://json-selftask.herokuapp.com/coreCourse"), headers: {"Accept": "application/json"});
-    var resBody = json.decode(res.body);
-
-    setState(() {
-      coreCourse = resBody;
-    });
-
-    print(resBody);
-
-    return "Sucess";
-  }
-  Future<String> getUniversity() async {
-    var res = await http
-        .get(Uri.parse("https://json-selftask.herokuapp.com/universityCourse"), headers: {"Accept": "application/json"});
-    var resBody = json.decode(res.body);
-
-    setState(() {
-      courseUniversity = resBody;
-    });
-
-    print(resBody);
-
-    return "Sucess";
-  }
-  Future<String> getMath() async {
-    var res = await http
-        .get(Uri.parse("https://json-selftask.herokuapp.com/mathCourse"), headers: {"Accept": "application/json"});
-    var resBody = json.decode(res.body);
-
-    setState(() {
-      courseMath = resBody;
-    });
-
-    print(resBody);
-
-    return "Sucess";
   }
 
   Widget _cCatagory(){
@@ -368,7 +236,6 @@ class _AddSubject extends State<AddSubject> {
                 {
                   if(category != "Core Course"){
                     data=[];
-                    _mySelection = null;
                     data = coreCourse;
                   }
                   category="Core Course";
@@ -378,7 +245,6 @@ class _AddSubject extends State<AddSubject> {
                 {
                   if(category != "University Course"){
                     data=[];
-                    _mySelection = null;
                     data = courseUniversity;
                   }
                   category = "University Course";
@@ -388,7 +254,6 @@ class _AddSubject extends State<AddSubject> {
                 {
                   if(category != "Math Course"){
                     data=[];
-                    _mySelection = null;
                     data = courseMath;
                   }
                   category = "Math Course";
@@ -396,7 +261,6 @@ class _AddSubject extends State<AddSubject> {
                 break;
               default:
                 {
-                  _mySelection = null;
                   data = [];
                 }
                 break;
@@ -408,93 +272,55 @@ class _AddSubject extends State<AddSubject> {
         });
   }
 
-  Widget _cDetail(){
+  Widget _cCode(){
     return TextFormField(
-      controller: _courseDetail,
-      minLines: 3,
-      maxLines: 3,
-      decoration: InputDecoration(
-        label: Text('Assesment Detail'),
-      )
-    );
-
-  }
-
-  Widget _dropDown(BuildContext context){
-    return DropdownButtonFormField(
-        validator: (value) {
-          if (value == null) {
-            return 'Please select the course';
-          }
-          return null;
-        },
-      decoration: InputDecoration(
-        label: Text("Course Selection"),
-      ),
-      isExpanded: true,
-      value: _mySelection,
-      items: data.map((item) {
-        return DropdownMenuItem(
-          onTap: (){
-            _isLab = item['isLab'];
-            _is2ndClass = item['is2ndClass'];
-            if(_isLab == "0"){
-              _labSection.clear();
-            }
-            if(_is2ndClass == "0"){
-              _labTime?.clear();
-              _labDay=null;
-            }
-            _courseName.text = item['courseName'].toString();
-            _courseCode.text = item['courseCode'].toString();
-            _creditHour = int.parse(item['courseCredit'].toString());
-
-          },
-          child: Text("${item['courseCode']} - ${item['courseName']}"),
-          value: item['courseCode'].toString(),
-
-        );
-      }).toList(),
-      onChanged: (newVal) {
-        setState(() {
-          _mySelection = newVal as String?;
-
-        });
-      });
-  }
-
-
-  Widget _cNme(){
-    return DropdownButtonFormField<CourseListModel>(
-      value: _selectedCourseCode,
-      isExpanded: true,
-      items: courseCode.map((CourseListModel courseList) {
-        return DropdownMenuItem<CourseListModel>(
-          value: courseList,
-          child: Text(courseList.courseCode),
-        );
-      }).toList(),
-      onChanged: onCodeChange,
-      elevation: 16,
-    );
-  }
-
-  Widget _cCode() {
-    return TextFormField(
-      controller: _courseCode,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter course code';
+          return 'Please enter some text';
         }
         return null;
       },
+      controller: _courseCode,
+      keyboardType: TextInputType.text,
       decoration: InputDecoration(
         label: Text('Course Code'),
       ),
     );
   }
 
-  Widget _cSection() {
+  Widget _cName(){
+    return TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter some text';
+        }
+        return null;
+      },
+      controller: _courseName,
+      keyboardType: TextInputType.text,
+      decoration: InputDecoration(
+        label: Text('Course Name'),
+      ),
+    );
+  }
+
+  Widget _cCreditHour(){
+    return TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter some text';
+        }
+        return null;
+      },
+      controller: _creditHour,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        label: Text('Credit Hour'),
+      ),
+    );
+  }
+
+  Widget _cLectureSection() {
     return TextFormField(
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -505,13 +331,13 @@ class _AddSubject extends State<AddSubject> {
       controller: _courseSection,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
-        label: Text('Course Section'),
+        label: Text('Lecture Section'),
       ),
     );
   }
 
   Widget _lSection() {
-    bool isThere = false;
+    bool isThere = true;
     if(_isLab == 1){
       isThere = true;
     }else{
@@ -658,43 +484,15 @@ class _AddSubject extends State<AddSubject> {
     );
   }
 
-
-
-
-  Widget _daysCheckBox(day) {
-    bool isCheck = false;
-    return CheckboxListTile(
-        controlAffinity: ListTileControlAffinity.leading,
-        title: Text(day),
-        value: isCheck,
-        onChanged: (bool? value) {
-          setState(() {
-            isCheck = value!;
-          });
-        });
+  Widget _cDetail(){
+    return TextFormField(
+        controller: _courseDetail,
+        minLines: 3,
+        maxLines: 3,
+        decoration: InputDecoration(
+          label: Text('Assesment Detail'),
+        )
+    );
   }
 
-  // Widget _ConfirmButton(BuildContext context) {
-  //   return
-  //
-  //   return ElevatedButton(
-  //     onPressed: () {
-  //       Navigator.push(
-  //           context, MaterialPageRoute(builder: (context) => SubjectList()));
-  //     },
-  //     style: ElevatedButton.styleFrom(
-  //         primary: Colors.green,
-  //         fixedSize: const Size(300, 60),
-  //         shape:
-  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
-  //     child: Text('Confirm'),
-  //   );
-  // }
-
-  Widget _checkBoxList(CheckBoxState checkbox) => CheckboxListTile(
-        controlAffinity: ListTileControlAffinity.leading,
-        value: checkbox.value,
-        title: Text(checkbox.title),
-        onChanged: (value) => setState(() => checkbox.value = value!),
-      );
 }
