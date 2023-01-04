@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:self_task_student/Bloc/Manage%20Assignment/assignment_bloc.dart';
 import 'package:self_task_student/Presentation/Manage%20Assignmetn/AssignmentEdit.dart';
-
 import 'AssignmentAdd.dart';
 
 class AssignmentList extends StatefulWidget{
@@ -18,13 +17,10 @@ class _AssignmentList extends State<AssignmentList>{
   final AssignmentBloc assignmentBloc = AssignmentBloc();
   final user = FirebaseAuth.instance.currentUser!;
 
-
   @override
   void initState() {
     super.initState();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
