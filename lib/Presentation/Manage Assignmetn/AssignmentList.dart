@@ -147,7 +147,7 @@ class _AssignmentList extends State<AssignmentList>{
                     fontSize: 14,
                     fontWeight: FontWeight.bold),
               ),
-              subtitle: Text("Due in ${calculateRemainingDate(state, index)} days",
+              subtitle: Text(chooseDescriptionDueOrComplete(state, index),
                 style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.normal,
@@ -181,6 +181,19 @@ class _AssignmentList extends State<AssignmentList>{
       }
     else{
       return 'assets/exam.png';
+    }
+  }
+
+  String chooseDescriptionDueOrComplete(state, index){
+    int remainingDate = calculateRemainingDate(state,index);
+
+    //if task not overdue
+    if(remainingDate>0){
+    return "Due in $remainingDate days";
+    }
+    //if task overdue (auto count as completed)
+    else{
+    return "Completed";
     }
   }
 
