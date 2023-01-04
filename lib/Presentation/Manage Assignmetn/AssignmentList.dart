@@ -48,49 +48,8 @@ class _AssignmentList extends State<AssignmentList>{
                 height: 40.0,
                 color: Colors.white,
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12.0, right: 12.0),
-                child: Material(
-                  elevation: 8,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(25)),
-                      gradient: LinearGradient(
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft,
-                        colors: [
-                          Colors.greenAccent,
-                          Colors.lightBlue
-                        ],
-                      ),
-                    ),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          primary: Colors.transparent,
-                          fixedSize: const Size(300, 60),
-                          shape:
-                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(25))),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const AssignmentAdd(),
-                                settings: RouteSettings(
-                                  arguments: {
-                                    "courseId": courseId,
-                                  },
-                                )
-                            )).then((_) => setState((){
-                          assignmentBloc.add(GetUserAssignment(user.uid, courseId));
-                        }));
-                      },
-                      child: const Text('Add Task'),
-                    ),
-                  ),
-                ),
-
-              ),
+              //Calling add task button
+              _addTaskButton(context, courseId),
             ],
           ),
           body: Container(
@@ -120,6 +79,51 @@ class _AssignmentList extends State<AssignmentList>{
             )
           ),
         ),
+    );
+  }
+
+  Widget _addTaskButton(BuildContext context,int courseId){
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0, right: 12.0),
+      child: Material(
+        elevation: 8,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        child: Container(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(25)),
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Colors.greenAccent,
+                Colors.lightBlue
+              ],
+            ),
+          ),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                primary: Colors.transparent,
+                fixedSize: const Size(300, 60),
+                shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(25))),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AssignmentAdd(),
+                      settings: RouteSettings(
+                        arguments: {
+                          "courseId": courseId,
+                        },
+                      )
+                  )).then((_) => setState((){
+                assignmentBloc.add(GetUserAssignment(user.uid, courseId));
+              }));
+            },
+            child: const Text('Add Task'),
+          ),
+        ),
+      ),
     );
   }
 
