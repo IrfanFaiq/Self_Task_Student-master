@@ -137,68 +137,30 @@ class _AssignmentList extends State<AssignmentList>{
           child: Card(
             elevation: 2,
             margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 6),
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding:
-                                    const EdgeInsets.only(left: 8, right: 8),
-                                    child: Text(
-                                      state[index].assignmentName.toString(),
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  //Edit Task Button
-                                  _editTask(state,index),
-                                  //Delete Task Button
-                                  _deleteTask(state, index),
-                                ],
-                              ),
-                            ],
-                          ),
-
-                          Padding(
-                            padding: EdgeInsets.only(left: 8, right: 8),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Due in ${calculateRemainingDate(state, index)} days",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black87),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
+            child: ListTile(
+              leading: Image(
+                image: AssetImage('assets/assignment.png'),
+                width: 80,
+                height: 80,),
+              title: Text(
+                state[index].assignmentName.toString(),
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text("Due in ${calculateRemainingDate(state, index)} days",
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black87),
+              ),
+              trailing:  Wrap(
+                spacing: 12, // space between two icons
+                children: <Widget>[
+                  //Edit Task Button
+                  _editTask(state,index),
+                  //Delete Task Button
+                  _deleteTask(state, index), // icon-2
                 ],
               ),
             ),
@@ -212,7 +174,7 @@ class _AssignmentList extends State<AssignmentList>{
     var parsedDate= DateTime.parse(state[index].dueDate);
     DateTime currentDate = DateTime.now();
 
-    final Duration duration  = currentDate.difference(parsedDate);
+    final Duration duration  = parsedDate.difference(currentDate);
     int remainingDate = duration.inDays;
     return remainingDate;
   }
