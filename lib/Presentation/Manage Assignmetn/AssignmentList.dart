@@ -16,6 +16,9 @@ class _AssignmentList extends State<AssignmentList>{
 
   final AssignmentBloc assignmentBloc = AssignmentBloc();
   final user = FirebaseAuth.instance.currentUser!;
+  List ?inProgressList = [];
+  List ?upcomingList = [];
+  List ?completedList = [];
 
   @override
   void initState() {
@@ -66,12 +69,11 @@ class _AssignmentList extends State<AssignmentList>{
                   return const Center(child: CircularProgressIndicator());
 
                 } else if (state is GetAssignmentState) {
-                  if(state.listAssignment.length == 0){
+                  if(state.listAssignment.isEmpty){
                     return Center(child: Text("Please add a task"));
                   }else{
-                    return _getAssignmentList(context, state.listAssignment, assignmentBloc);
+                    return _getAssignmentList(context, state.listAssignment , assignmentBloc);
                   }
-
                 } else {
                   return const Center(child: Text("No data"));
                 }
@@ -127,9 +129,53 @@ class _AssignmentList extends State<AssignmentList>{
     );
   }
 
+
   Widget _getAssignmentList(BuildContext context, state, assignmentBloc){
+
+    assignDataToList(state);
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+
+      children: [
+        Text("In Progress"),
+        _getPartOfList(context, upcomingList, assignmentBloc),
+      ],
+    );
+  }
+
+  assignDataToList(state){
+    //clear all the list when enter this function again
+    completedList = [];
+    inProgressList = [];
+    upcomingList = [];
+
+    for(int i=0 ; i < state.length ; i++)
+    {
+      // if task is overdue
+      if(calculateRemainingDate(state,i) < 0){
+        completedList?.add(state[i]);
+      }
+      //if due date no overdue
+      else{
+        //if task is in progress
+        if(calculateRemainingDate(state,i) <= 7){
+          inProgressList?.add(state[i]);
+        }
+        else{
+          //add the upcoming task to the list
+          upcomingList?.add(state[i]);
+        }
+      }
+    }
+  }
+
+  Widget _getPartOfList (BuildContext context, lists, assignmentBloc){
     return ListView.builder(
-      itemCount: state == null ? 0 : state.length,
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      itemCount:  lists == null ? 0 : lists?.length,
       itemBuilder: (context, index){
         return GestureDetector(
           onTap: (){},
@@ -138,16 +184,16 @@ class _AssignmentList extends State<AssignmentList>{
             margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 6),
             child: ListTile(
               leading: Image(
-                image: AssetImage(chooseImage(state[index].type.toString())),
+                image: AssetImage(chooseImage(lists[index].type.toString())),
                 width: 80,
                 height: 80,),
               title: Text(
-                state[index].assignmentName.toString(),
+                lists[index].assignmentName.toString(),
                 style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(chooseDescriptionDueOrComplete(state, index),
+              subtitle: Text(chooseDescriptionDueOrComplete(lists, index),
                 style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.normal,
@@ -157,9 +203,9 @@ class _AssignmentList extends State<AssignmentList>{
                 spacing: 12, // space between two icons
                 children: <Widget>[
                   //Edit Task Button
-                  _editTask(state,index),
+                  _editTask(lists,index),
                   //Delete Task Button
-                  _deleteTask(state, index), // icon-2
+                  _deleteTask(lists, index), // icon-2
                 ],
               ),
             ),
