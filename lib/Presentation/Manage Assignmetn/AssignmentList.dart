@@ -129,7 +129,6 @@ class _AssignmentList extends State<AssignmentList>{
     );
   }
 
-
   Widget _getAssignmentList(BuildContext context, state, assignmentBloc){
 
     assignDataToList(state);

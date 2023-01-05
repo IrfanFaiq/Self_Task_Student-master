@@ -123,8 +123,6 @@ class _SubjectList extends State<SubjectList>{
     );
   }
 
-
-
   Widget _getUserCourseList(BuildContext context, state, userBloc){
     return ListView.builder(
         itemCount: state == null ? 0 : state.length,
