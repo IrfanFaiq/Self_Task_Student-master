@@ -139,8 +139,32 @@ class _AssignmentList extends State<AssignmentList>{
       crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
-        Text("In Progress"),
+        const SizedBox(height: 15),
+        Text("In Progress",
+          style: TextStyle(color: Color.fromRGBO(48, 47, 48, 1.0),
+              fontWeight: FontWeight.w700,
+              fontSize: 16),
+        ),
+        const SizedBox(height: 5),
+        _getPartOfList(context, inProgressList, assignmentBloc),
+
+        const SizedBox(height: 15),
+        Text("Upcoming",
+          style: TextStyle(color: Color.fromRGBO(48, 47, 48, 1.0),
+              fontWeight: FontWeight.w700,
+              fontSize: 16),
+        ),
+        const SizedBox(height: 5),
         _getPartOfList(context, upcomingList, assignmentBloc),
+
+        const SizedBox(height: 15),
+        Text("Completed",
+          style: TextStyle(color: Color.fromRGBO(48, 47, 48, 1.0),
+              fontWeight: FontWeight.w700,
+              fontSize: 16),
+        ),
+        const SizedBox(height: 5),
+        _getPartOfList(context, completedList, assignmentBloc),
       ],
     );
   }
@@ -172,6 +196,7 @@ class _AssignmentList extends State<AssignmentList>{
   }
 
   Widget _getPartOfList (BuildContext context, lists, assignmentBloc){
+    //lists = [];
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
