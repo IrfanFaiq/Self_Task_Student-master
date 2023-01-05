@@ -229,8 +229,6 @@ class _AddSubject extends State<AddSubject> {
         onChanged: (String? newValue) {
           setState(() {
             _courseCatagory = newValue!;
-            print(_courseCatagory);
-            print(category);
             switch (_courseCatagory) {
               case "Core Course":
                 {
@@ -267,7 +265,6 @@ class _AddSubject extends State<AddSubject> {
             }
 
             _labDay=null;
-            print(category);
           });
         });
   }

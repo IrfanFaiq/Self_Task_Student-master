@@ -107,7 +107,6 @@ class _SubjectList extends State<SubjectList>{
                   return const Center(child: CircularProgressIndicator());
 
                 } else if (state is GetAllLoad) {
-                  print("this");
                   if(state.listData.length == 0){
                     return Center(child: Text("Please add a subject"));
                   }else{
