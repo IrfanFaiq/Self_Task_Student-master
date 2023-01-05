@@ -140,32 +140,28 @@ class _AssignmentList extends State<AssignmentList>{
 
       children: [
         const SizedBox(height: 15),
-        Text("In Progress",
-          style: TextStyle(color: Color.fromRGBO(48, 47, 48, 1.0),
-              fontWeight: FontWeight.w700,
-              fontSize: 16),
-        ),
+        setTitleText("In Progress"),
         const SizedBox(height: 5),
         _getPartOfList(context, inProgressList, assignmentBloc),
 
         const SizedBox(height: 15),
-        Text("Upcoming",
-          style: TextStyle(color: Color.fromRGBO(48, 47, 48, 1.0),
-              fontWeight: FontWeight.w700,
-              fontSize: 16),
-        ),
+        setTitleText("Upcoming"),
         const SizedBox(height: 5),
         _getPartOfList(context, upcomingList, assignmentBloc),
 
         const SizedBox(height: 15),
-        Text("Completed",
-          style: TextStyle(color: Color.fromRGBO(48, 47, 48, 1.0),
-              fontWeight: FontWeight.w700,
-              fontSize: 16),
-        ),
+        setTitleText("Completed"),
         const SizedBox(height: 5),
         _getPartOfList(context, completedList, assignmentBloc),
       ],
+    );
+  }
+
+  Widget setTitleText(title){
+    return Text(title,
+      style: TextStyle(color: Color.fromRGBO(48, 47, 48, 1.0),
+          fontWeight: FontWeight.w700,
+          fontSize: 16),
     );
   }
 
