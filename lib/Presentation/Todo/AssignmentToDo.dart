@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:self_task_student/Bloc/Manage%20Assignment/assignment_bloc.dart';
 import 'package:self_task_student/Bloc/Manage%20Course/course_bloc.dart';
 
+import '../Manage Assignmetn/AssignmentEdit.dart';
+
 class AssignmentToDo extends StatefulWidget {
   const AssignmentToDo({Key? key}) :super(key: key);
 
@@ -21,6 +23,26 @@ class _AssignmentToDo extends State<AssignmentToDo> {
   @override
   void initState() {
     super.initState();
+  }
+  Widget _editTask(state, index){
+    return IconButton(
+      icon: const Icon(Icons.edit),
+      onPressed: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const AssignmentEdit(),
+                settings: RouteSettings(
+                  arguments: {
+                    "id": state.listAssignment[index].id.toString(),
+                    "courseId": state.listAssignment[index].courseId.toString(),
+                  },
+                ))).then((_)=>setState((){
+          assignmentBloc.add(GetUserAssignment(user.uid, state[index].courseId));
+        }));
+
+      },
+    );
   }
 
   Widget build(BuildContext context) {
@@ -98,16 +120,31 @@ class _AssignmentToDo extends State<AssignmentToDo> {
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Text("Course Info:", style: TextStyle(fontWeight: FontWeight.bold),),
-                                                  Text("Course Code: ${state.model.courseCode}"),
-                                                  Text("Course Name: ${state.model.courseName}"),
-                                                  Text("Credit Hour: ${state.model.creditHour}"),
-                                                  Text("Class Section: ${state.model.section}"),
-                                                  state.model.labSection == null ? Container() : Text("Lab Section: ${state.model.labSection}"),
-                                                  Text("Class Day: ${state.model.day}"),
-                                                  Text("Class Time: ${state.model.time}"),
-                                                  state.model.labDay == null ? Container() : Text("Lab/2nd Class Day: ${state.model.labDay}"),
-                                                  state.model.labTime == null ? Container() : Text("Lab/2nd Class Time: ${state.model.labTime}"),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(bottom: 8.0),
+                                                    child: Text("Course Info:", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                                                  ),
+                                                  Row(children: [Text("Due Date: ", style: TextStyle(fontWeight: FontWeight.bold)),Text("${state.model.courseCode}"),],
+                                                  ),
+                                                  Row(children: [Text("Course Name: ", style: TextStyle(fontWeight: FontWeight.bold)),Text("${state.model.courseName}"),],
+                                                  ),
+                                                  Row(children: [Text("Credit Hour: ", style: TextStyle(fontWeight: FontWeight.bold)),Text("${state.model.creditHour}"),],
+                                                  ),
+                                                  Row(children: [Text("Class Section: ", style: TextStyle(fontWeight: FontWeight.bold)),Text("${state.model.section}"),],
+                                                  ),
+                                                  state.model.labSection == null ? Container() :
+                                                  Row(children: [Text("Lab Section: ", style: TextStyle(fontWeight: FontWeight.bold)),Text("${state.model.labSection}"),],
+                                                  ),
+                                                  Row(children: [Text("Class Day: ", style: TextStyle(fontWeight: FontWeight.bold)),Text("${state.model.day}"),],
+                                                  ),
+                                                  Row(children: [Text("Class Time: ", style: TextStyle(fontWeight: FontWeight.bold)),Text("${state.model.time}"),],
+                                                  ),
+                                                  state.model.labDay == null ? Container() :
+                                                  Row(children: [Text("Lab/2nd Class Day: ", style: TextStyle(fontWeight: FontWeight.bold)),Text("${state.model.labDay}"),],
+                                                  ),
+                                                  state.model.labTime == null ? Container() :
+                                                  Row(children: [Text("Lab/2nd Class Time: ", style: TextStyle(fontWeight: FontWeight.bold)),Text("${state.model.labTime}"),],
+                                                  ),
                                                 ],
                                               )
                                           ),
@@ -203,34 +240,71 @@ class _AssignmentToDo extends State<AssignmentToDo> {
                                                           ),
                                                           Column(
                                                             // mainAxisAlignment: MainAxisAlignment.center,
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              Text(
-                                                                    "Work Title: ${state
-                                                                        .listAssignment[index]
-                                                                        .assignmentName}"),
-                                                              Text(" Description: ${state
-                                                                  .listAssignment[index]
-                                                                  .assignmentDesc}",
-                                                                maxLines: 3,
-                                                                softWrap: false,
-                                                                overflow: TextOverflow.fade,
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                          Row(
+                                                          children: [
+                                                          Text("Work Title: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                                                          Text("${state.listAssignment[index].assignmentName}"),
+                                                        ],
+                                                      ),
+                                                    if(state.listAssignment[index].assignmentDesc?.isEmpty ?? true)
+                                                  Row(
+                                                  children: [
+                                                  Text("Description: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                                                  Text("None")])
+                                                else
+                                                Row(
+                                                  children: [
+                                                  Text("Description: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                                                  Text("${state.listAssignment[index].assignmentDesc}",
+                                                  maxLines: 3,
+                                                  softWrap: false,
+                                                  overflow: TextOverflow.fade,),
+                                                ],
+                                                ),
+
+
+                                                              Row(
+                                                                children: [
+                                                                  Text("Work Type: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                                                                  Text("${state.listAssignment[index].type}"),
+                                                                ],
                                                               ),
-                                                              Text("Work Type: ${state.listAssignment[index].type}"),
-                                                              Text("Due Date: ${state
-                                                                  .listAssignment[index]
-                                                                  .dueDate}"),
-                                                              Text("Due Time: ${state
-                                                                  .listAssignment[index]
-                                                                  .dueTime}"),
-                                                            ],
-                                                          )
+
+                                                              Row(
+                                                                children: [
+                                                                  Text("Due Date: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                                                                  Text("${state
+                                                                      .listAssignment[index]
+                                                                      .dueDate}"),
+                                                                ],
+                                                              ),
+
+                                                              Row(
+                                                                children: [
+                                                                  Text("Due Time: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                                                                  Text("${state
+                                                                      .listAssignment[index]
+                                                                      .dueTime}"),
+                                                                  SizedBox(
+                                                                    width: 45,
+                                                                    child: _editTask(state, index),
+                                                                  ),
+                                                                ],
+                                                              ),
+
+
+                                                              ],
+                                                          ),
+
                                                         ],
                                                       )
 
                                                   ),
                                                 ),
                                             ),
+
                                             );
 
                                         },
@@ -248,5 +322,7 @@ class _AssignmentToDo extends State<AssignmentToDo> {
         )
     );
   }
+
+
 }
 
