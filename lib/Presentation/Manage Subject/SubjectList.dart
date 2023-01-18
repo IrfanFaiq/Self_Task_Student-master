@@ -7,7 +7,7 @@ import 'package:self_task_student/Presentation/Manage%20Subject/AddSubject.dart'
 import 'package:self_task_student/Presentation/Manage%20Subject/EditSubject.dart';
 import 'package:self_task_student/Presentation/Manage%20Assignmetn/AssignmentList.dart';
 import 'package:settings_ui/settings_ui.dart';
-
+import 'package:flutter/cupertino.dart';
 import '../../Bloc/Manage Course/course_bloc.dart';
 
 class SubjectList extends StatefulWidget{
@@ -203,10 +203,36 @@ class _SubjectList extends State<SubjectList>{
                                       IconButton(
                                         icon: const Icon(Icons.delete, color: Colors.red,),
                                         onPressed: () {
-                                          courseBloc.add(DeleteUserCourseData(state[index].id));
-                                          setState((){
-                                            courseBloc.add(GetAllCourse(user.uid));
-                                          });
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text("Are you sure you want to delete this course?"),
+                                                actions: <Widget>[
+                                                  CupertinoButton(
+                                                    child: Text("Cancel"),
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                  ),
+                                                  CupertinoButton(
+                                                    child: Text("Delete"),
+                                                    onPressed: () {
+
+                                                      courseBloc.add(DeleteUserCourseData(state[index].id));
+                                                      setState((){
+                                                        courseBloc.add(GetAllCourse(user.uid));
+                                                      });
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                  ),
+
+
+                                                ],
+                                              );
+                                            },
+                                          );
+
                                         },
                                       ),
                                     ],
