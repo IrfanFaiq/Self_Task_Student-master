@@ -10,6 +10,7 @@ import 'package:self_task_student/Data/Database/SQLite/Model/ReminderModel.dart'
 import 'package:self_task_student/Data/Database/SQLite/Provider/AssignmentProvider.dart';
 import 'package:self_task_student/Data/Database/SQLite/Provider/ReminderProvider.dart';
 import 'package:self_task_student/Data/Database/SQLite/Repository/UserCourseRepository.dart';
+import '../../Bloc/service/remindNoti.dart';
 import '../Dashboard/SettingMenu.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../Manage Assignmetn/AssignmentList.dart';
@@ -37,9 +38,11 @@ class _Calendar extends State<Calendar> {
   ReminderProvider reminderProvider = ReminderProvider();
   AssignmentProvider assignmentProvider = AssignmentProvider();
 
-   void main() async{
-     List<AssignmentModel> eventTemp = await assignmentProvider.getAssignmentDateWithoutDate(user.uid);
-     List<ReminderModel> reminderTemp = await reminderProvider.getAllReminderWithoutDate(user.uid);
+  void main() async {
+    List<AssignmentModel> eventTemp =
+        await assignmentProvider.getAssignmentDateWithoutDate(user.uid);
+    List<ReminderModel> reminderTemp =
+        await reminderProvider.getAllReminderWithoutDate(user.uid);
     setState(() {
       events = eventTemp;
       reminderEvents = reminderTemp;
@@ -47,7 +50,7 @@ class _Calendar extends State<Calendar> {
   }
 
   @override
-  void initState()  {
+  void initState() {
     main();
     DateFormat dateFormat = DateFormat("yyyy-MM-dd");
     String dateNow = dateFormat.format(_focusDay);
@@ -74,13 +77,13 @@ class _Calendar extends State<Calendar> {
         ),
         body: MultiBlocProvider(
             providers: [
-              BlocProvider(create: (context){
+              BlocProvider(create: (context) {
                 DateFormat dateFormat = DateFormat("yyyy-MM-dd");
                 String dateNow = dateFormat.format(_focusDay);
                 assignmentBloc.add(GetAssignmentDate(user.uid, dateNow));
                 return assignmentBloc;
               }),
-              BlocProvider(create: (context){
+              BlocProvider(create: (context) {
                 DateFormat dateFormat = DateFormat("yyyy-MM-dd");
                 String dateNow = dateFormat.format(_focusDay);
                 reminderBloc.add(GetAllReminderEvent(user.uid, dateNow));
@@ -94,19 +97,18 @@ class _Calendar extends State<Calendar> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         TableCalendar(
-
                           focusedDay: _focusDay,
                           eventLoader: (date) {
                             DateFormat dateFormat = DateFormat("yyyy-MM-dd");
                             String d1 = dateFormat.format(date);
 
-                            for(int i=0; i<events.length; i++){
+                            for (int i = 0; i < events.length; i++) {
                               if (d1 == events[i].dueDate) {
                                 return [date];
                               }
                             }
-                            for(int i =0; i<reminderEvents.length; i++){
-                              if(d1 == reminderEvents[i].dateReminder){
+                            for (int i = 0; i < reminderEvents.length; i++) {
+                              if (d1 == reminderEvents[i].dateReminder) {
                                 return [date];
                               }
                             }
@@ -119,11 +121,14 @@ class _Calendar extends State<Calendar> {
                               setState(() {
                                 _selectedDay = selectedDay;
                                 _focusDay = focusDay;
-                                DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-                                String dateNow = dateFormat.format(_selectedDay);
-                                assignmentBloc.add(
-                                    GetAssignmentDate(user.uid, dateNow));
-                                reminderBloc.add(GetAllReminderEvent(user.uid, dateNow));
+                                DateFormat dateFormat =
+                                    DateFormat("yyyy-MM-dd");
+                                String dateNow =
+                                    dateFormat.format(_selectedDay);
+                                assignmentBloc
+                                    .add(GetAssignmentDate(user.uid, dateNow));
+                                reminderBloc.add(
+                                    GetAllReminderEvent(user.uid, dateNow));
                               });
                             }
                           },
@@ -142,289 +147,376 @@ class _Calendar extends State<Calendar> {
                             )
                           ],
                         ),
-
                         SizedBox(
                           height: 250,
                           child: SingleChildScrollView(
-                                child:  Column(
-                                  children: [
-
-
-                                    BlocBuilder<AssignmentBloc,AssignmentState>(builder: (context, state){
-                                      if(state is AssignmentLoading){
-                                        return const Center(child: CircularProgressIndicator(),);
-                                      }else if(state is GetAssignmentState){
-                                        if(state.listAssignment.isNotEmpty){
-                                          return SizedBox(
-                                            child: Column(
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.only(top: 5),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      Text(
-                                                        "Work",
-                                                        style: Theme.of(context).textTheme.bodyMedium,
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                                ListView.builder(
-                                                    physics: NeverScrollableScrollPhysics(),
-                                                    shrinkWrap: true,
-                                                    itemCount: state.listAssignment == null
+                            child: Column(
+                              children: [
+                                BlocBuilder<AssignmentBloc, AssignmentState>(
+                                    builder: (context, state) {
+                                  if (state is AssignmentLoading) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  } else if (state is GetAssignmentState) {
+                                    if (state.listAssignment.isNotEmpty) {
+                                      return SizedBox(
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(top: 5),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Work",
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium,
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            ListView.builder(
+                                                physics:
+                                                    NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
+                                                itemCount:
+                                                    state.listAssignment == null
                                                         ? 0
-                                                        : state.listAssignment.length,
-                                                    itemBuilder: (context, index) {
-                                                      return GestureDetector(
-                                                        onTap: () {},
-                                                        child: Card(
-                                                          elevation: 8,
-                                                          child: ListTile(
-                                                            leading: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                              children: [circleColor(state.listAssignment[index].type)],
-                                                            ),
-                                                            title: Text(
-                                                                "${state.listAssignment[index].assignmentName}"),
-                                                            subtitle: Text(
-                                                                state.listAssignment[index].dueTime),
-                                                            trailing: PopupMenuButton(
-                                                              child: Icon(Icons.more_vert),
-                                                              onSelected: (value){
-                                                                DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-                                                                String dateNow = dateFormat.format(_focusDay);
-                                                                switch(value){
-                                                                  case "info":{
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                            builder: (context) => const AssignmentList(),
-                                                                            settings: RouteSettings(
-                                                                              arguments: {
-                                                                                "id": state.listAssignment[index].courseId,
-                                                                              },
-                                                                            ))).then((_) => setState(() {
-                                                                              assignmentBloc.add(GetAssignmentDate(user.uid, dateNow));
-                                                                              reminderBloc.add(GetAllReminderEvent(user.uid, dateNow));
-                                                                    }));
-                                                                  }
-                                                                  break;
-                                                                  case "todo":{
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                            builder: (
-                                                                                context) => const AssignmentToDo(),
-                                                                            settings: RouteSettings(
-                                                                              arguments: {
-                                                                                "id": state.listAssignment[index].courseId,
-                                                                              },
-                                                                            ))).then((_) =>
-                                                                        setState(() {
-                                                                          assignmentBloc.add(GetAssignmentDate(user.uid, dateNow));
-                                                                          reminderBloc.add(GetAllReminderEvent(user.uid, dateNow));
-                                                                        }));
-                                                                  }
-                                                                  break;
+                                                        : state.listAssignment
+                                                            .length,
+                                                itemBuilder: (context, index) {
+                                                  return GestureDetector(
+                                                    onTap: () {},
+                                                    child: Card(
+                                                      elevation: 8,
+                                                      child: ListTile(
+                                                        leading: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            circleColor(state
+                                                                .listAssignment[
+                                                                    index]
+                                                                .type)
+                                                          ],
+                                                        ),
+                                                        title: Text(
+                                                            "${state.listAssignment[index].assignmentName}"),
+                                                        subtitle: Text(state
+                                                            .listAssignment[
+                                                                index]
+                                                            .dueTime),
+                                                        trailing:
+                                                            PopupMenuButton(
+                                                          child: Icon(
+                                                              Icons.more_vert),
+                                                          onSelected: (value) {
+                                                            DateFormat
+                                                                dateFormat =
+                                                                DateFormat(
+                                                                    "yyyy-MM-dd");
+                                                            String dateNow =
+                                                                dateFormat.format(
+                                                                    _focusDay);
+                                                            switch (value) {
+                                                              case "info":
+                                                                {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) => const AssignmentList(),
+                                                                          settings: RouteSettings(
+                                                                            arguments: {
+                                                                              "id": state.listAssignment[index].courseId,
+                                                                            },
+                                                                          ))).then((_) => setState(() {
+                                                                        assignmentBloc.add(GetAssignmentDate(
+                                                                            user.uid,
+                                                                            dateNow));
+                                                                        reminderBloc.add(GetAllReminderEvent(
+                                                                            user.uid,
+                                                                            dateNow));
+                                                                      }));
                                                                 }
-                                                              },
-                                                              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                                                                const PopupMenuItem<String>(
-                                                                  value: 'info',
-                                                                  child: Text('View Assignment'),
-                                                                ),
-                                                                const PopupMenuItem<String>(
-                                                                  value: 'todo',
-                                                                  child: Text('View Todo'),
-                                                                ),
-                                                              ],
+                                                                break;
+                                                              case "todo":
+                                                                {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) => const AssignmentToDo(),
+                                                                          settings: RouteSettings(
+                                                                            arguments: {
+                                                                              "id": state.listAssignment[index].courseId,
+                                                                            },
+                                                                          ))).then((_) => setState(() {
+                                                                        assignmentBloc.add(GetAssignmentDate(
+                                                                            user.uid,
+                                                                            dateNow));
+                                                                        reminderBloc.add(GetAllReminderEvent(
+                                                                            user.uid,
+                                                                            dateNow));
+                                                                      }));
+                                                                }
+                                                                break;
+                                                            }
+                                                          },
+                                                          itemBuilder: (BuildContext
+                                                                  context) =>
+                                                              <
+                                                                  PopupMenuEntry<
+                                                                      String>>[
+                                                            const PopupMenuItem<
+                                                                String>(
+                                                              value: 'info',
+                                                              child: Text(
+                                                                  'View Assignment'),
+                                                            ),
+                                                            const PopupMenuItem<
+                                                                String>(
+                                                              value: 'todo',
+                                                              child: Text(
+                                                                  'View Todo'),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                })
+                                          ],
+                                        ),
+                                      );
+                                    } else {
+                                      return Container();
+                                    }
+                                  } else {
+                                    return const Center(child: Text("error"));
+                                  }
+                                }),
+                                BlocBuilder<ReminderBloc, ReminderState>(
+                                    builder: (context, state) {
+                                  if (state is GetAllReminderState) {
+                                    if (state.listReminder.isNotEmpty) {
+                                      return SizedBox(
+                                          child: Column(
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 5),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Reminder",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          ListView.builder(
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              itemCount: state.listReminder ==
+                                                      null
+                                                  ? 0
+                                                  : state.listReminder.length,
+                                              itemBuilder: (context, index) {
+                                                return GestureDetector(
+                                                  onTap: () {},
+                                                  child: Card(
+                                                    elevation: 8,
+                                                    child: ListTile(
+                                                      leading: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          const Icon(
+                                                            Icons.circle,
+                                                            color: Colors.blue,
+                                                          )
+                                                        ],
+                                                      ),
+                                                      title: Text(
+                                                          "${state.listReminder[index].titleReminder}"),
+                                                      subtitle: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          SizedBox(
+                                                              child: Text(
+                                                                  "${state.listReminder[index].descriptionReminder}")),
+                                                          Text(
+                                                              "${state.listReminder[index].timeReminder}")
+                                                        ],
+                                                      ),
+                                                      trailing: PopupMenuButton(
+                                                        child: Icon(
+                                                            Icons.more_vert),
+                                                        onSelected: (value) {
+                                                          switch (value) {
+                                                            case "delete":
+                                                              {
+                                                                print(value);
+                                                                DateFormat
+                                                                    dateFormat =
+                                                                    DateFormat(
+                                                                        "yyyy-MM-dd");
+                                                                String dateNow =
+                                                                    dateFormat
+                                                                        .format(
+                                                                            _focusDay);
+                                                                reminderBloc.add(
+                                                                    DeleteReminderEvent(state
+                                                                        .listReminder[
+                                                                            index]
+                                                                        .id!));
+                                                                reminderBloc.add(
+                                                                    GetAllReminderEvent(
+                                                                        user.uid,
+                                                                        dateNow));
+                                                              }
+                                                              break;
+                                                            case "edit":
+                                                              {
+                                                                print(value);
+                                                                showDialog(
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (context) {
+                                                                      _reminderTitle.text = state
+                                                                          .listReminder[
+                                                                              index]
+                                                                          .titleReminder;
+                                                                      _reminderDesc.text = state
+                                                                          .listReminder[
+                                                                              index]
+                                                                          .descriptionReminder;
+                                                                      _reminderTime.text = state
+                                                                          .listReminder[
+                                                                              index]
+                                                                          .timeReminder;
+                                                                      return SizedBox(
+                                                                        child:
+                                                                            AlertDialog(
+                                                                          title:
+                                                                              const Text("Edit Reminder"),
+                                                                          content: Container(
+                                                                              height: 200,
+                                                                              child: Form(
+                                                                                key: _formKey,
+                                                                                child: Column(children: [
+                                                                                  TextFormField(
+                                                                                    controller: _reminderTitle,
+                                                                                    validator: (value) {
+                                                                                      if (value == null || value.isEmpty) {
+                                                                                        return "Please insert the title";
+                                                                                      }
+                                                                                    },
+                                                                                    decoration: const InputDecoration(
+                                                                                      label: Text("Title"),
+                                                                                    ),
+                                                                                  ),
+                                                                                  TextFormField(
+                                                                                    controller: _reminderDesc,
+                                                                                    decoration: const InputDecoration(
+                                                                                      label: Text("Description"),
+                                                                                    ),
+                                                                                  ),
+                                                                                  timeSelector(),
+                                                                                ]),
+                                                                              )),
+                                                                          actions: [
+                                                                            ElevatedButton(
+                                                                                style: ElevatedButton.styleFrom(
+                                                                                  primary: Colors.blue,
+                                                                                ),
+                                                                                onPressed: () {
+                                                                                  DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+                                                                                  String dateNow = dateFormat.format(_focusDay);
+                                                                                  if (_formKey.currentState!.validate()) {
+                                                                                    ReminderModel reminderModel = ReminderModel(id: state.listReminder[index].id, titleReminder: _reminderTitle.text, dateReminder: dateNow, timeReminder: _reminderTime.text, userId: user.uid, descriptionReminder: _reminderDesc.text);
+
+                                                                                    reminderBloc.add(UpdateReminderEvent(reminderModel));
+                                                                                    _reminderTitle.clear();
+                                                                                    _reminderDesc.clear();
+                                                                                    _reminderTime.clear();
+                                                                                    reminderBloc.add(GetAllReminderEvent(user.uid, dateNow));
+                                                                                    Navigator.of(context).pop();
+                                                                                  }
+                                                                                },
+                                                                                child: const Text("Confirm")),
+                                                                          ],
+                                                                        ),
+                                                                      );
+                                                                    });
+                                                              }
+                                                              break;
+                                                          }
+                                                        },
+                                                        itemBuilder: (BuildContext
+                                                                context) =>
+                                                            <
+                                                                PopupMenuEntry<
+                                                                    String>>[
+                                                          const PopupMenuItem<
+                                                              String>(
+                                                            value: "edit",
+                                                            child: Text('Edit'),
+                                                          ),
+                                                          const PopupMenuItem<
+                                                              String>(
+                                                            value: "delete",
+                                                            child: Text(
+                                                              "Delete",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .red),
                                                             ),
                                                           ),
-                                                        ),
-                                                      );
-                                                    })],
-                                            ),
-                                          );
-                                        }else{
-                                          return Container();
-                                        }
-
-
-                                      }else{
-
-                                        return const Center(child: Text("error"));
-                                      }
-                                    }),
-
-
-                                    BlocBuilder<ReminderBloc, ReminderState>(builder: (context, state){
-
-                                      if(state is GetAllReminderState){
-                                        if(state.listReminder.isNotEmpty){
-                                          return SizedBox(
-                                              child: Column(
-                                                children:[
-                                                  Padding(
-                                                    padding: const EdgeInsets.only(top: 5),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      children: [
-                                                        Text(
-                                                          "Reminder",
-                                                          style: Theme.of(context).textTheme.bodyMedium,
-                                                        )
-                                                      ],
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
-                                                  ListView.builder(
-                                                      physics: NeverScrollableScrollPhysics(),
-                                                      shrinkWrap: true,
-                                                      itemCount: state.listReminder == null
-                                                          ? 0
-                                                          : state.listReminder.length,
-                                                      itemBuilder: (context, index) {
-                                                        return GestureDetector(
-                                                          onTap: () {},
-                                                          child: Card(
-                                                            elevation: 8,
-                                                            child: ListTile(
-                                                              leading: Column(
-                                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                                children: [const Icon(Icons.circle, color: Colors.blue,)],
-                                                              ),
-                                                              title: Text(
-                                                                  "${state.listReminder[index].titleReminder}"),
-                                                              subtitle: Column(
-                                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: [
-                                                                  SizedBox(child: Text("${state.listReminder[index].descriptionReminder}")),
-                                                                  Text("${state.listReminder[index].timeReminder}")
-                                                                ],
-                                                              ),
-                                                              trailing: PopupMenuButton(
-                                                                child: Icon(Icons.more_vert),
-                                                                onSelected: (value){
-                                                                  switch(value){
-                                                                    case "delete":{
-                                                                      print(value);
-                                                                      DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-                                                                      String dateNow = dateFormat.format(_focusDay);
-                                                                      reminderBloc.add(DeleteReminderEvent(state.listReminder[index].id!));
-                                                                      reminderBloc.add(GetAllReminderEvent(user.uid, dateNow));
-                                                                    }
-                                                                    break;
-                                                                    case "edit":{
-                                                                      print(value);
-                                                                      showDialog(
-                                                                          context: context,
-                                                                          builder: (context) {
-                                                                            _reminderTitle.text = state.listReminder[index].titleReminder;
-                                                                            _reminderDesc.text = state.listReminder[index].descriptionReminder;
-                                                                            _reminderTime.text = state.listReminder[index].timeReminder;
-                                                                            return SizedBox(
-                                                                              child: AlertDialog(
-
-                                                                                title: const Text("Edit Reminder"),
-                                                                                content: Container(
-                                                                                  height: 200,
-                                                                                    child: Form(
-                                                                                      key: _formKey,
-                                                                                      child: Column(children: [
-                                                                                        TextFormField(
-                                                                                          controller: _reminderTitle,
-                                                                                          validator: (value) {
-                                                                                            if (value == null || value.isEmpty) {
-                                                                                              return "Please insert the title";
-                                                                                            }
-                                                                                          },
-                                                                                          decoration: const InputDecoration(
-                                                                                            label: Text("Title"),
-                                                                                          ),
-                                                                                        ),
-                                                                                        TextFormField(
-                                                                                          controller: _reminderDesc,
-                                                                                          decoration: const InputDecoration(
-                                                                                            label: Text("Description"),
-                                                                                          ),
-                                                                                        ),
-                                                                                        timeSelector(),
-                                                                                      ]),
-                                                                                    )),
-                                                                                actions: [
-                                                                                  ElevatedButton(
-                                                                                      style: ElevatedButton.styleFrom(
-                                                                                        primary: Colors.blue,
-                                                                                      ),
-                                                                                      onPressed: () {
-                                                                                        DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-                                                                                        String dateNow = dateFormat.format(_focusDay);
-                                                                                        if (_formKey.currentState!.validate()) {
-                                                                                          ReminderModel reminderModel = ReminderModel(
-                                                                                            id: state.listReminder[index].id,
-                                                                                              titleReminder: _reminderTitle.text,
-                                                                                              dateReminder: dateNow,
-                                                                                              timeReminder: _reminderTime.text,
-                                                                                              userId: user.uid,
-                                                                                              descriptionReminder:_reminderDesc.text);
-
-                                                                                          reminderBloc
-                                                                                              .add(UpdateReminderEvent(reminderModel));
-                                                                                          _reminderTitle.clear();
-                                                                                          _reminderDesc.clear();
-                                                                                          _reminderTime.clear();
-                                                                                          reminderBloc.add(GetAllReminderEvent(user.uid, dateNow));
-                                                                                          Navigator.of(context).pop();
-                                                                                        }
-                                                                                      },
-                                                                                      child: const Text("Confirm")),
-                                                                                ],
-                                                                              ),
-                                                                            );
-                                                                          });
-                                                                    }
-                                                                    break;
-                                                                  }
-
-                                                                },
-                                                                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                                                                  const PopupMenuItem<String>(
-                                                                    value: "edit",
-                                                                    child: Text('Edit'),
-                                                                  ),
-                                                                  const PopupMenuItem<String>(
-                                                                    value: "delete",
-                                                                    child: Text("Delete", style: TextStyle(color: Colors.red),),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      })],
-                                              )
-                                          );
-                                        }
-                                        else{
-                                          return Container();
-                                        }
-
-                                      }else{
-
-                                        return const Center(child: CircularProgressIndicator());
-                                      }
-                                    })
-                                  ],
-                                ),
-                              ),
+                                                );
+                                              })
+                                        ],
+                                      ));
+                                    } else {
+                                      return Container();
+                                    }
+                                  } else {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                })
+                              ],
+                            ),
+                          ),
                         ),
                       ]),
-                ))
-        ),
+                ))),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blue,
           child: const Icon(Icons.add),
@@ -473,14 +565,16 @@ class _Calendar extends State<Calendar> {
                                   dateReminder: dateNow,
                                   timeReminder: _reminderTime.text,
                                   userId: user.uid,
-                                  descriptionReminder:_reminderDesc.text);
+                                  descriptionReminder: _reminderDesc.text);
 
+                              sendQueryReminderNotification(reminderModel);
                               reminderBloc
                                   .add(CreateReminderEvent(reminderModel));
                               _reminderTitle.clear();
                               _reminderDesc.clear();
                               _reminderTime.clear();
-                              reminderBloc.add(GetAllReminderEvent(user.uid, dateNow));
+                              reminderBloc
+                                  .add(GetAllReminderEvent(user.uid, dateNow));
 
                               Navigator.of(context).pop();
                             }
@@ -558,16 +652,28 @@ class _Calendar extends State<Calendar> {
             )));
   }
 
-  Widget circleColor(String type){
-    if(type == "Assignment"){
-      return const Icon(Icons.circle, color: Colors.green,);
-    }else if(type == "Exam"){
-      return const Icon(Icons.circle, color: Colors.red,);
-    }else if(type == "Quiz"){
-      return const Icon(Icons.circle, color: Colors.yellow,);
-    }else if(type == "Project"){
-      return const Icon(Icons.circle, color: Colors.purpleAccent,);
-    }else{
+  Widget circleColor(String type) {
+    if (type == "Assignment") {
+      return const Icon(
+        Icons.circle,
+        color: Colors.green,
+      );
+    } else if (type == "Exam") {
+      return const Icon(
+        Icons.circle,
+        color: Colors.red,
+      );
+    } else if (type == "Quiz") {
+      return const Icon(
+        Icons.circle,
+        color: Colors.yellow,
+      );
+    } else if (type == "Project") {
+      return const Icon(
+        Icons.circle,
+        color: Colors.purpleAccent,
+      );
+    } else {
       return Icon(Icons.circle);
     }
   }
