@@ -22,7 +22,6 @@ class AssignmentProvider{
   }
 
   Future<int> addAssignmentData(AssignmentModel assignmentModel){
-    print('hello go here please 1');
     return _AssignmentInstance.addAssignment(assignmentModel);
   }
 

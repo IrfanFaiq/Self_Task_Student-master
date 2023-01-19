@@ -180,7 +180,6 @@ class CourseDatabase {
 
   Future<int> addAssignment(AssignmentModel newAssignmentModel) async {
     Database db = await instance.database;
-    print('hello go here please');
     return await db.insert('Assignment', newAssignmentModel.toJson());
   }
 
